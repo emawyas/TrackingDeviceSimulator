@@ -192,7 +192,7 @@ namespace TrackingDeviceSimulator
             this.toTextBox.Name = "toTextBox";
             this.toTextBox.Size = new System.Drawing.Size(190, 20);
             this.toTextBox.TabIndex = 9;
-            this.toTextBox.Text = "24.816248,46.629549";
+            this.toTextBox.Text = "24.792387, 46.631975";
             // 
             // toLabel
             // 
@@ -210,7 +210,7 @@ namespace TrackingDeviceSimulator
             this.fromTextBox.Name = "fromTextBox";
             this.fromTextBox.Size = new System.Drawing.Size(190, 20);
             this.fromTextBox.TabIndex = 7;
-            this.fromTextBox.Text = "24.961306,46.733994";
+            this.fromTextBox.Text = "24.958445,46.6971833";
             // 
             // fromLabel
             // 
