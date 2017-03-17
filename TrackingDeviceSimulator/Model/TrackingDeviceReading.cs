@@ -9,7 +9,7 @@ namespace TrackingDeviceSimulator.Model
     public enum EastWest { East, West }
     public enum NorthSouth { North, South }
 
-    class TrackingDeviceReading
+    public class TrackingDeviceReading
     {
         public DateTime GpsDateTime { get; set; }
 

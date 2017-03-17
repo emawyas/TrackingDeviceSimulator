@@ -14,6 +14,7 @@ using GMap.NET;
 using System.Drawing;
 using System.Device.Location;
 using System.Threading;
+using GMap.NET.WindowsForms.Markers;
 
 namespace TrackingDeviceSimulator.Presenter
 {
@@ -76,9 +77,11 @@ namespace TrackingDeviceSimulator.Presenter
             currentRoutePoints = drawRoute(RTO.routes[0].legs[0].steps);
             Bearing currBearing = calculateBearing(currentRoutePoints[0].Longitude, currentRoutePoints[0].Latitude, currentRoutePoints[1].Longitude, currentRoutePoints[1].Latitude);
             updateCurrentReading(currentRoutePoints[0].Latitude, currentRoutePoints[0].Longitude, currBearing.EW, currBearing.NS, currBearing.heading);
-            //Thread thread = new Thread(() => drive(currentRoutePoints, currReading));
-            //thread.Start();
-            //drive(currentRoutePoints, currReading);
+
+            Simulation simRoute = new Simulation(currentRoutePoints, currReading);
+            _view.startSimulation(simRoute);
+
+            drive(currentRoutePoints, currReading);
         }
 
         //Draw the overall Route on the map
@@ -215,29 +218,8 @@ namespace TrackingDeviceSimulator.Presenter
 
         public void drive(List<GeoCoordinate> route, TrackingDeviceReading reading)
         {
-            GeoCoordinate curr = route[0];
-            double distance = 0;
-            int step = 0;
 
-            // meters per millisecond
-            double speed = reading.Speed * 0.000277778;
-            // in milliseconds
-            double timeTil = 0;
 
-            while (step < route.Count){
-                curr = route[step];
-                Bearing currBearing = calculateBearing(curr.Longitude, curr.Latitude, curr.Longitude, curr.Latitude);
-                updateCurrentReading(curr.Latitude, curr.Longitude, currBearing.EW, currBearing.NS, currBearing.heading);
-                //Calculate distance in meters
-                distance = curr.GetDistanceTo(route[step+1]);
-                //calculate time to distance
-                timeTil = distance / speed;
-                //wait then update
-                Debug.WriteLine("step = " + step + " speed = " + Convert.ToInt32(timeTil) + " total steps " + route.Count);
-                System.Threading.Thread.Sleep(Convert.ToInt32(timeTil));
-                //System.Threading.Thread.Sleep(timeTil);
-                step++;
-            }
             //last point
             //curr = route[step];
         }

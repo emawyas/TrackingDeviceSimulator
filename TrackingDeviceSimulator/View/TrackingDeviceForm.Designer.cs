@@ -67,6 +67,7 @@ namespace TrackingDeviceSimulator
             this.gpdDateTimeLabel = new System.Windows.Forms.Label();
             this.speedWarningLabel = new System.Windows.Forms.Label();
             this.gMap = new GMap.NET.WindowsForms.GMapControl();
+            this.simulateDrive = new System.ComponentModel.BackgroundWorker();
             this.trackingConfigs.SuspendLayout();
             this.tripBox.SuspendLayout();
             this.speedBox.SuspendLayout();
@@ -429,6 +430,12 @@ namespace TrackingDeviceSimulator
             this.gMap.Zoom = 10D;
             this.gMap.Load += new System.EventHandler(this.gMap_Load);
             // 
+            // simulateDrive
+            // 
+            this.simulateDrive.WorkerReportsProgress = true;
+            this.simulateDrive.DoWork += new System.ComponentModel.DoWorkEventHandler(this.simulateDrive_DoWork);
+            this.simulateDrive.ProgressChanged += this.simulateDrive_ProgressChanged;
+            // 
             // TrackingDeviceForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -492,6 +499,7 @@ namespace TrackingDeviceSimulator
         private System.Windows.Forms.Label gpdDateTimeLabel;
         private System.Windows.Forms.Label speedWarningLabel;
         private GMap.NET.WindowsForms.GMapControl gMap;
+        private System.ComponentModel.BackgroundWorker simulateDrive;
     }
 }
 

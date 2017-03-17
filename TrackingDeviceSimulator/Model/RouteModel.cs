@@ -1,5 +1,7 @@
-﻿using System;
+﻿using GMap.NET.WindowsForms;
+using System;
 using System.Collections.Generic;
+using System.Device.Location;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -108,6 +110,23 @@ namespace TrackingDeviceSimulator.Model
     public class Polyline
     {
         public string points { get; set; }
+    }
+
+    public class Simulation
+    {
+        public Simulation(List<GeoCoordinate> route, TrackingDeviceReading reading)
+        {
+            entireRoute = route;
+            currReading = reading;
+        }
+        public List<GeoCoordinate> entireRoute { get; set; }
+        public TrackingDeviceReading currReading { get; set; }
+    }
+
+    public class RouteProgress
+    {
+        public GMapOverlay markers { get; set; }
+        public GeoCoordinate[] coords { get; set; }
     }
 
 }

@@ -24,8 +24,10 @@ namespace TrackingDeviceSimulator.View
 
         void updateReading(TrackingDeviceReading reading);
 
-        void initMap();
-
         void drawRoute(GMapOverlay routes);
+
+        void placeMarkers(GMapOverlay markers);
+
+        void startSimulation(Simulation obj);
     }
 }
