@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<TrackerConfigurations>
+  <DriverID>123456789</DriverID>
+  <MaxSpeed>120</MaxSpeed>
+  <DeviceSerial>4CE04604EG</DeviceSerial>
+  <FirmWareVersion>1.0.0.1</FirmWareVersion>
+</TrackerConfigurations>

@@ -16,7 +16,12 @@ namespace TrackingDeviceSimulator
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+
+            var view = new TrackingDeviceForm();
+            var presenter = new Presenter.TrackingDevicePresenter(view);
+
+
+            Application.Run(view);
         }
     }
 }
