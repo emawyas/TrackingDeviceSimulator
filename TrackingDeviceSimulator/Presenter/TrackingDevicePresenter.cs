@@ -73,15 +73,20 @@ namespace TrackingDeviceSimulator.Presenter
             var json = new WebClient().DownloadString("http://maps.googleapis.com/maps/api/directions/json?origin=" + from
                                                         + "&destination=" + to + "&sensor=false");
             RTO = JsonConvert.DeserializeObject<RouteTransferObject>(json);
-            int numberSteps = RTO.routes[0].legs[0].steps.Length;
-            currentRoutePoints = drawRoute(RTO.routes[0].legs[0].steps);
-            Bearing currBearing = calculateBearing(currentRoutePoints[0].Longitude, currentRoutePoints[0].Latitude, currentRoutePoints[1].Longitude, currentRoutePoints[1].Latitude);
-            updateCurrentReading(currentRoutePoints[0].Latitude, currentRoutePoints[0].Longitude, currBearing.EW, currBearing.NS, currBearing.heading);
-
-            Simulation simRoute = new Simulation(currentRoutePoints, currReading);
-            _view.startSimulation(simRoute);
-
-            drive(currentRoutePoints, currReading);
+            if (RTO != null)
+            {
+                int numberSteps = RTO.routes[0].legs[0].steps.Length;
+                currentRoutePoints = drawRoute(RTO.routes[0].legs[0].steps);
+                Bearing currBearing = calculateBearing(currentRoutePoints[0].Longitude, currentRoutePoints[0].Latitude, currentRoutePoints[1].Longitude, currentRoutePoints[1].Latitude);
+                updateCurrentReading(currentRoutePoints[0].Latitude, currentRoutePoints[0].Longitude, currBearing.EW, currBearing.NS, currBearing.heading);
+                Simulation simRoute = new Simulation(currentRoutePoints, currReading);
+                _view.startSimulation(simRoute);
+                drive(currentRoutePoints, currReading);
+            }
+            else
+            {
+                _view.displayErrorMessage("Could not receive route information");
+            }
         }
 
         //Draw the overall Route on the map

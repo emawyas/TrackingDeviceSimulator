@@ -29,5 +29,7 @@ namespace TrackingDeviceSimulator.View
         void placeMarkers(GMapOverlay markers);
 
         void startSimulation(Simulation obj);
+
+        void displayErrorMessage(string msg);
     }
 }

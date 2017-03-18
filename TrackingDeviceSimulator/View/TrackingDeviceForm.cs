@@ -150,8 +150,13 @@ namespace TrackingDeviceSimulator
             RouteProgress routeProgress = (RouteProgress)e.UserState;
             var coords = routeProgress.coords;
             var markers = routeProgress.markers;
+            Bearing currBearing;
 
-            Bearing currBearing = presenter.calculateBearing(coords[0].Longitude, coords[0].Latitude, coords[1].Longitude, coords[1].Latitude);
+            if (coords[1]!=null)
+                currBearing = presenter.calculateBearing(coords[0].Longitude, coords[0].Latitude, coords[1].Longitude, coords[1].Latitude);
+            else
+                currBearing = presenter.calculateBearing(coords[0].Longitude, coords[0].Latitude, coords[0].Longitude, coords[0].Latitude);
+
             presenter.updateCurrentReading(coords[0].Latitude, coords[0].Longitude, currBearing.EW, currBearing.NS, currBearing.heading);
 
             placeMarkers(markers);
@@ -218,6 +223,12 @@ namespace TrackingDeviceSimulator
 
                 step++;
             }
+        }
+
+        // Used to display error messages from the presenter
+        public void displayErrorMessage(string msg)
+        {
+            MessageBox.Show(msg);
         }
     }
 }
