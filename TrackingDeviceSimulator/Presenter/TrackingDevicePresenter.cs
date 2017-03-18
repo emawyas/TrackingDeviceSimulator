@@ -60,6 +60,7 @@ namespace TrackingDeviceSimulator.Presenter
         //Update the vehicle's speed
         public void updateSpeed(int newSpeed)
         {
+            //TODO: apply logic to change while car moving
             currReading.Speed = newSpeed;
             int maxSpeed = Int32.Parse(_view.MaxSpeed);
             if (newSpeed > maxSpeed) _view.speedWarning(true);
