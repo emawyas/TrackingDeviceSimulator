@@ -61,7 +61,7 @@ namespace TrackingDeviceSimulator.Model
 
     public class Bearing
     {
-        public String heading { get; set; }
+        public string heading { get; set; }
         public NorthSouth NS { get; set; }
         public EastWest EW { get; set; }
     }

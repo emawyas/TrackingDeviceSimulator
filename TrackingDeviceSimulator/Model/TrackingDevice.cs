@@ -16,5 +16,17 @@ namespace TrackingDeviceSimulator.Model
         public string DeviceSerial { get; set; }
 
         public string FirmWareVersion { get; set; }
+
+        public double latitude { get; set; }
+
+        public double longitude { get; set; }
+
+        public string heading { get; set; }
+
+        public string EW { get; set; }
+
+        public string NS { get; set; }
+
+        public DateTime GpsDateTime { get; set; }
     }
 }

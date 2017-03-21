@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using TrackingDeviceSimulator.Model;
 using TrackingDeviceSimulator.View;
@@ -13,8 +12,7 @@ using GMap.NET.WindowsForms;
 using GMap.NET;
 using System.Drawing;
 using System.Device.Location;
-using System.Threading;
-using GMap.NET.WindowsForms.Markers;
+
 
 namespace TrackingDeviceSimulator.Presenter
 {
@@ -23,6 +21,7 @@ namespace TrackingDeviceSimulator.Presenter
     {
         private readonly ITrackingDviceView _view;
 
+        private TrackingDevice ourDevice;
         public TrackingDeviceReading currReading;
         public List<GeoCoordinate> currentRoutePoints;
 
@@ -42,15 +41,23 @@ namespace TrackingDeviceSimulator.Presenter
             var configs = XDocument.Load("TrackerConfigurations.xml");
             var configItems = configs.Root.Descendants();
             Dictionary<string, string> configDict = new Dictionary<string, string>();
+            ourDevice = new TrackingDevice();
 
             foreach (var item in configItems)
             {
                 configDict.Add(item.Name.ToString(), item.Value);
             }
             _view.DriverId = configDict["DriverID"];
+            ourDevice.DriverId = configDict["DriverID"]; ;
+
             _view.DeviceSerial = configDict["DeviceSerial"];
+            ourDevice.DeviceSerial = configDict["DeviceSerial"];
+
             _view.MaxSpeed = configDict["MaxSpeed"];
+            ourDevice.MaxSpeed = Int32.Parse(configDict["MaxSpeed"]);
+
             _view.FirmWareVersion = configDict["FirmWareVersion"];
+            ourDevice.FirmWareVersion = configDict["FirmWareVersion"];
 
             currReading = new TrackingDeviceReading();
             updateSpeed(120);
@@ -82,12 +89,36 @@ namespace TrackingDeviceSimulator.Presenter
                 updateCurrentReading(currentRoutePoints[0].Latitude, currentRoutePoints[0].Longitude, currBearing.EW, currBearing.NS, currBearing.heading);
                 Simulation simRoute = new Simulation(currentRoutePoints, currReading);
                 _view.startSimulation(simRoute);
-                drive(currentRoutePoints, currReading);
+                //run a test here
+                //then refactor
+                updateService(ourDevice);
+                
+
             }
             else
             {
                 _view.displayErrorMessage("Could not receive route information");
             }
+        }
+
+        private void updateService(TrackingDevice device)
+        {
+            device.latitude = currReading.Latitude;
+            device.longitude = currReading.Longitude;
+            device.NS = currReading.NS.ToString();
+            device.EW = currReading.EW.ToString();
+            device.heading = currReading.Heading;
+            device.GpsDateTime = currReading.GpsDateTime;
+            string data = JsonConvert.SerializeObject(device);
+            Debug.WriteLine(data);
+            string result = "";
+            using (var client = new WebClient())
+            {
+                //TODO: handle connection exceptions
+                client.Headers[HttpRequestHeader.ContentType] = "application/json";
+                result = client.UploadString("http://localhost:50680/RestService.svc/addDevice", "POST", data);
+            }
+            Debug.WriteLine("restful result = " + result);
         }
 
         //Draw the overall Route on the map
@@ -197,8 +228,8 @@ namespace TrackingDeviceSimulator.Presenter
             if (x2 > x1) currBearing.EW = EastWest.East;
             else if (x2 < x1) currBearing.EW = EastWest.West;
 
-            if (y2 > y1) currBearing.NS = NorthSouth.North;
-            else if (y2 < y1) currBearing.NS = NorthSouth.South;
+            if (y2 > y1) currBearing.NS = NorthSouth.South;
+            else if (y2 < y1) currBearing.NS = NorthSouth.North;
 
             currBearing.heading = calculateHeading(x1, y1, x2, y2).ToString();
 
@@ -220,14 +251,6 @@ namespace TrackingDeviceSimulator.Presenter
             var angle = Math.Atan2(y, x) * (180 / Math.PI);
             var bearing = (angle + 360) % 360;
             return bearing;
-        }
-
-        public void drive(List<GeoCoordinate> route, TrackingDeviceReading reading)
-        {
-
-
-            //last point
-            //curr = route[step];
         }
     }
 }
