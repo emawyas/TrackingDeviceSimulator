@@ -22,7 +22,7 @@ namespace TrackingDeviceSimulator.View
 
         void speedWarning(bool alert);
 
-        void updateReading(TrackingDeviceReading reading);
+        void updateReading(TrackingDevice device);
 
         void drawRoute(GMapOverlay routes);
 

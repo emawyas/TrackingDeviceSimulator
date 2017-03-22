@@ -114,13 +114,13 @@ namespace TrackingDeviceSimulator.Model
 
     public class Simulation
     {
-        public Simulation(List<GeoCoordinate> route, TrackingDeviceReading reading)
+        public Simulation(List<GeoCoordinate> route, TrackingDevice reading)
         {
             entireRoute = route;
             currReading = reading;
         }
         public List<GeoCoordinate> entireRoute { get; set; }
-        public TrackingDeviceReading currReading { get; set; }
+        public TrackingDevice currReading { get; set; }
     }
 
     public class RouteProgress

@@ -106,15 +106,15 @@ namespace TrackingDeviceSimulator
             }
         }
 
-        public void updateReading(TrackingDeviceReading reading)
+        public void updateReading(TrackingDevice device)
         {
-            this.gpsTimeTextBox.Text = reading.GpsDateTime.ToString();
-            this.latTextBox.Text = reading.Latitude.ToString();
-            this.longTextBox.Text = reading.Longitude.ToString();
-            this.ewTextBox.Text = reading.EW.ToString();
-            this.nsTextBox.Text = reading.NS.ToString();
-            this.headingTextBox.Text = reading.Heading;
-            this.gMap.Position = new GMap.NET.PointLatLng(reading.Latitude, reading.Longitude);
+            this.gpsTimeTextBox.Text = device.GpsDateTime.ToString();
+            this.latTextBox.Text = device.latitude.ToString();
+            this.longTextBox.Text = device.longitude.ToString();
+            this.ewTextBox.Text = device.EW;
+            this.nsTextBox.Text = device.NS;
+            this.headingTextBox.Text = device.heading;
+            this.gMap.Position = new GMap.NET.PointLatLng(device.latitude, device.longitude);
         }
 
         public void drawRoute(GMapOverlay routes)
@@ -158,7 +158,7 @@ namespace TrackingDeviceSimulator
                 currBearing = presenter.calculateBearing(coords[0].Longitude, coords[0].Latitude, coords[0].Longitude, coords[0].Latitude);
 
             presenter.updateCurrentReading(coords[0].Latitude, coords[0].Longitude, currBearing.EW, currBearing.NS, currBearing.heading);
-
+            presenter.updateService();
             placeMarkers(markers);
         }
 
@@ -166,7 +166,7 @@ namespace TrackingDeviceSimulator
         {
             Simulation sim = (Simulation) e.Argument;
             List<GeoCoordinate> route = sim.entireRoute;
-            TrackingDeviceReading reading = sim.currReading;
+            TrackingDevice reading = sim.currReading;
 
             BackgroundWorker reporter = (BackgroundWorker)sender;
 
@@ -217,7 +217,6 @@ namespace TrackingDeviceSimulator
                 routeProgress.markers = markers;
                 routeProgress.coords = coords;
                 reporter.ReportProgress(0, routeProgress);
-
                 if (step + 1 < route.Count)
                     System.Threading.Thread.Sleep(Convert.ToInt32(timeTil));
 

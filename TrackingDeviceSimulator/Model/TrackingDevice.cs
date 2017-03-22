@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TrackingDeviceSimulator.Model
 {
-    class TrackingDevice
+    public class TrackingDevice
     {
         // Configurations loaded from an XML file
         public string DriverId { get; set; }
@@ -28,5 +28,7 @@ namespace TrackingDeviceSimulator.Model
         public string NS { get; set; }
 
         public DateTime GpsDateTime { get; set; }
+
+        public int Speed { get; set; }
     }
 }

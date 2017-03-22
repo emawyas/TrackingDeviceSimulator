@@ -22,7 +22,6 @@ namespace TrackingDeviceSimulator.Presenter
         private readonly ITrackingDviceView _view;
 
         private TrackingDevice ourDevice;
-        public TrackingDeviceReading currReading;
         public List<GeoCoordinate> currentRoutePoints;
 
         private RouteTransferObject RTO;
@@ -59,7 +58,6 @@ namespace TrackingDeviceSimulator.Presenter
             _view.FirmWareVersion = configDict["FirmWareVersion"];
             ourDevice.FirmWareVersion = configDict["FirmWareVersion"];
 
-            currReading = new TrackingDeviceReading();
             updateSpeed(120);
 
         }
@@ -68,7 +66,7 @@ namespace TrackingDeviceSimulator.Presenter
         public void updateSpeed(int newSpeed)
         {
             //TODO: apply logic to change while car moving1
-            currReading.Speed = newSpeed;
+            ourDevice.Speed = newSpeed;
             int maxSpeed = Int32.Parse(_view.MaxSpeed);
             if (newSpeed > maxSpeed) _view.speedWarning(true);
             else _view.speedWarning(false);
@@ -87,13 +85,8 @@ namespace TrackingDeviceSimulator.Presenter
                 currentRoutePoints = drawRoute(RTO.routes[0].legs[0].steps);
                 Bearing currBearing = calculateBearing(currentRoutePoints[0].Longitude, currentRoutePoints[0].Latitude, currentRoutePoints[1].Longitude, currentRoutePoints[1].Latitude);
                 updateCurrentReading(currentRoutePoints[0].Latitude, currentRoutePoints[0].Longitude, currBearing.EW, currBearing.NS, currBearing.heading);
-                Simulation simRoute = new Simulation(currentRoutePoints, currReading);
+                Simulation simRoute = new Simulation(currentRoutePoints, ourDevice);
                 _view.startSimulation(simRoute);
-                //run a test here
-                //then refactor
-                updateService(ourDevice);
-                
-
             }
             else
             {
@@ -101,15 +94,9 @@ namespace TrackingDeviceSimulator.Presenter
             }
         }
 
-        private void updateService(TrackingDevice device)
+        public void updateService()
         {
-            device.latitude = currReading.Latitude;
-            device.longitude = currReading.Longitude;
-            device.NS = currReading.NS.ToString();
-            device.EW = currReading.EW.ToString();
-            device.heading = currReading.Heading;
-            device.GpsDateTime = currReading.GpsDateTime;
-            string data = JsonConvert.SerializeObject(device);
+            string data = JsonConvert.SerializeObject(ourDevice);
             Debug.WriteLine(data);
             string result = "";
             using (var client = new WebClient())
@@ -119,6 +106,7 @@ namespace TrackingDeviceSimulator.Presenter
                 result = client.UploadString("http://localhost:50680/RestService.svc/updateDevice", "PUT", data);
                 if (Int32.Parse(result) == 0)
                 {
+                    client.Headers[HttpRequestHeader.ContentType] = "application/json";
                     result = client.UploadString("http://localhost:50680/RestService.svc/addDevice", "POST", data);
                 }
             }
@@ -152,13 +140,13 @@ namespace TrackingDeviceSimulator.Presenter
         public void updateCurrentReading(double latitude, double longitude, EastWest ew, NorthSouth ns, string heading)
         {
             Debug.WriteLine("updating current reading");
-            currReading.GpsDateTime = DateTime.Now;
-            currReading.Latitude = latitude;
-            currReading.Longitude = longitude;
-            currReading.NS = ns;
-            currReading.EW = ew;
-            currReading.Heading = heading;
-            _view.updateReading(currReading);
+            ourDevice.GpsDateTime = DateTime.Now;
+            ourDevice.latitude = latitude;
+            ourDevice.longitude = longitude;
+            ourDevice.NS = ns.ToString();
+            ourDevice.EW = ew.ToString();
+            ourDevice.heading = heading;
+            _view.updateReading(ourDevice);
         }
 
         //Get usable information from each polyline object in each step in the form of 
