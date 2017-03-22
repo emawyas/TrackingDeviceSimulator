@@ -116,7 +116,11 @@ namespace TrackingDeviceSimulator.Presenter
             {
                 //TODO: handle connection exceptions
                 client.Headers[HttpRequestHeader.ContentType] = "application/json";
-                result = client.UploadString("http://localhost:50680/RestService.svc/addDevice", "POST", data);
+                result = client.UploadString("http://localhost:50680/RestService.svc/updateDevice", "PUT", data);
+                if (Int32.Parse(result) == 0)
+                {
+                    result = client.UploadString("http://localhost:50680/RestService.svc/addDevice", "POST", data);
+                }
             }
             Debug.WriteLine("restful result = " + result);
         }
