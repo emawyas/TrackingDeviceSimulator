@@ -66,7 +66,7 @@ namespace TrackingDeviceSimulator
         {
             var value = this.currSpeedTextBox.Text;
             int newSpeed = 0;
-            if (value.Length > 0 && Int32.TryParse(value, out newSpeed) && newSpeed > 0)
+            if (value.Length > 0 && Int32.TryParse(value, out newSpeed) && newSpeed >= 0)
             {
                 newSpeed = Int32.Parse(this.currSpeedTextBox.Text);
                 presenter.updateSpeed(newSpeed);
@@ -152,7 +152,7 @@ namespace TrackingDeviceSimulator
             var markers = routeProgress.markers;
             Bearing currBearing;
 
-            if (coords[1]!=null)
+            if (coords.Length > 1)
                 currBearing = presenter.calculateBearing(coords[0].Longitude, coords[0].Latitude, coords[1].Longitude, coords[1].Latitude);
             else
                 currBearing = presenter.calculateBearing(coords[0].Longitude, coords[0].Latitude, coords[0].Longitude, coords[0].Latitude);
@@ -178,23 +178,25 @@ namespace TrackingDeviceSimulator
             double speed = reading.Speed * 0.000277778;
             // in milliseconds
             double timeTil = 0;
-
             //Return Values
             GeoCoordinate[] coords = new GeoCoordinate[2];
             GMapOverlay markers = new GMapOverlay("markers");
 
             RouteProgress routeProgress = new RouteProgress();
 
+
             while (step < route.Count-1)
             {
                 curr = route[step];
+
+                
 
                 // move to on progress
                 //Bearing currBearing = calculateBearing(curr.Longitude, curr.Latitude, curr.Longitude, curr.Latitude);
                 //updateCurrentReading(curr.Latitude, curr.Longitude, currBearing.EW, currBearing.NS, currBearing.heading);
 
                 coords[0] = new GeoCoordinate(curr.Latitude, curr.Longitude);
-                coords[1] = new GeoCoordinate(route[step++].Latitude, route[step++].Longitude);
+                coords[1] = new GeoCoordinate(route[step+1].Latitude, route[step+1].Longitude);
 
                 //Calculate distance in meters
                 if (step + 1 < route.Count)

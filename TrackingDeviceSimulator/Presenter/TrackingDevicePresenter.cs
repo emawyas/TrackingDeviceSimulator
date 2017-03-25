@@ -223,8 +223,14 @@ namespace TrackingDeviceSimulator.Presenter
             if (x2 > x1) currBearing.EW = EastWest.East;
             else if (x2 < x1) currBearing.EW = EastWest.West;
 
-            if (y2 > y1) currBearing.NS = NorthSouth.South;
-            else if (y2 < y1) currBearing.NS = NorthSouth.North;
+            if (y2 < y1)
+            {
+                currBearing.NS = NorthSouth.South;
+            }
+            else
+            {
+                currBearing.NS = NorthSouth.North;
+            }
 
             currBearing.heading = calculateHeading(x1, y1, x2, y2).ToString();
 
