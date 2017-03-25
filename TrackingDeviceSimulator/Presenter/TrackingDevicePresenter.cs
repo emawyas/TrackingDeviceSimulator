@@ -81,9 +81,11 @@ namespace TrackingDeviceSimulator.Presenter
             RTO = JsonConvert.DeserializeObject<RouteTransferObject>(json);
             if (RTO != null)
             {
-                int numberSteps = RTO.routes[0].legs[0].steps.Length;
                 currentRoutePoints = drawRoute(RTO.routes[0].legs[0].steps);
                 Bearing currBearing = calculateBearing(currentRoutePoints[0].Longitude, currentRoutePoints[0].Latitude, currentRoutePoints[1].Longitude, currentRoutePoints[1].Latitude);
+                ourDevice.CompleteRoute = RTO.routes[0].overview_polyline.points;
+                ourDevice.Destination = RTO.routes[0].legs[0].end_location.ToString();
+                ourDevice.Source = RTO.routes[0].legs[0].start_location.ToString();
                 updateCurrentReading(currentRoutePoints[0].Latitude, currentRoutePoints[0].Longitude, currBearing.EW, currBearing.NS, currBearing.heading);
                 Simulation simRoute = new Simulation(currentRoutePoints, ourDevice);
                 _view.startSimulation(simRoute);
@@ -146,6 +148,7 @@ namespace TrackingDeviceSimulator.Presenter
             ourDevice.NS = ns.ToString();
             ourDevice.EW = ew.ToString();
             ourDevice.heading = heading;
+            //updateService();
             _view.updateReading(ourDevice);
         }
 

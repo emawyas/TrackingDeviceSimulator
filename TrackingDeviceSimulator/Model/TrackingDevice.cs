@@ -30,5 +30,12 @@ namespace TrackingDeviceSimulator.Model
         public DateTime GpsDateTime { get; set; }
 
         public int Speed { get; set; }
+
+        public string CompleteRoute { get; set; }
+
+        public string Source { get; set; }
+
+        public string Destination { get; set; }
+
     }
 }

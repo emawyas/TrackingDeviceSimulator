@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 namespace TrackingDeviceSimulator.Model
 {
 
+    public enum EastWest { East, West }
+    public enum NorthSouth { North, South }
+
     public class RouteTransferObject
     {
         public Geocoded_Waypoints[] geocoded_waypoints { get; set; }
@@ -28,7 +31,7 @@ namespace TrackingDeviceSimulator.Model
         public Bounds bounds { get; set; }
         public string copyrights { get; set; }
         public Leg[] legs { get; set; }
-        public Overview_Polyline overview_polyline { get; set; }
+        public Polyline overview_polyline { get; set; }
         public string summary { get; set; }
         public object[] warnings { get; set; }
         public object[] waypoint_order { get; set; }
@@ -84,11 +87,6 @@ namespace TrackingDeviceSimulator.Model
         public float lng { get; set; }
     }
 
-    public class Overview_Polyline
-    {
-        public string points { get; set; }
-    }
-
     public class Distance
     {
         public string text { get; set; }
@@ -105,6 +103,10 @@ namespace TrackingDeviceSimulator.Model
     {
         public double lat { get; set; }
         public double lng { get; set; }
+        public override string ToString()
+        {
+            return lat + ", " + lng;
+        }
     }
 
     public class Polyline

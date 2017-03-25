@@ -87,7 +87,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\RouteModel.cs" />
-    <Compile Include="Model\TrackingDeviceReading.cs" />
     <Compile Include="Presenter\TrackingDevicePresenter.cs" />
     <Compile Include="View\ITrackingDviceView.cs" />
     <Compile Include="View\TrackingDeviceForm.cs">
